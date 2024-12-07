@@ -128,7 +128,7 @@
         function handleFileSelect(evt) {
 
             //var files = evt.target.files; // FileList object
-            var files = $("#excelFile").files;
+            var files = jQuery('#excelFile').files;
             var xl2json = new ExcelToJSON();
             xl2json.parseExcel(files[0]);
         }
