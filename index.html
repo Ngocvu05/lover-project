@@ -85,7 +85,7 @@
         const uploadButton = document.getElementById('uploadButton');
         const generateButton = document.getElementById('generateButton');
         const excelFileInput = document.getElementById('excelFile');
-
+        var   jsonData = "";
         // Function: Handle file upload
         uploadButton.addEventListener('click', () => {
             const file = excelFileInput.files[0];
@@ -104,6 +104,7 @@
         generateButton.addEventListener('click', () => {
             alert('Generating PDF files...');
             // Add logic to process the Excel file and generate PDFs
+            generatePDFs(jsonData);
         });
         var ExcelToJSON = function () {
 
@@ -121,6 +122,7 @@
                         var json_object = JSON.stringify(XL_row_object);
                         console.log(JSON.parse(json_object));
                         $('#xlx_json').val(json_object);
+                        jsonData = JSON.parse(json_object);
                     })
                 };
 
