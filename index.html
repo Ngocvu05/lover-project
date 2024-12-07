@@ -1,48 +1,93 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
-<script>
-  var ExcelToJSON = function() {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to PDF Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Excel to PDF Generator</h1>
+        
+        <!-- Upload Excel File -->
+        <label for="excelFile">Upload Excel File:</label>
+        <input type="file" id="excelFile" accept=".xlsx, .xls" />
 
-    this.parseExcel = function(file) {
-      var reader = new FileReader();
+        <!-- Upload Button -->
+        <button id="uploadButton">Upload Excel</button>
 
-      reader.onload = function(e) {
-        var data = e.target.result;
-        var workbook = XLSX.read(data, {
-          type: 'binary'
+        <!-- Generate PDF Button -->
+        <button id="generateButton" class="hidden">Generate PDF Files</button>
+    </div>
+
+    <script>
+        // JavaScript for handling file upload and button events
+        const uploadButton = document.getElementById('uploadButton');
+        const generateButton = document.getElementById('generateButton');
+        const excelFileInput = document.getElementById('excelFile');
+
+        // Function: Handle file upload
+        uploadButton.addEventListener('click', () => {
+            const file = excelFileInput.files[0];
+            if (!file) {
+                alert('Please select an Excel file to upload!');
+                return;
+            }
+
+            // Simulate upload logic
+            alert(`File "${file.name}" uploaded successfully!`);
+            generateButton.classList.remove('hidden'); // Show the Generate PDF button
         });
-        workbook.SheetNames.forEach(function(sheetName) {
-          // Here is your object
-          var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-          var json_object = JSON.stringify(XL_row_object);
-          console.log(JSON.parse(json_object));
-          jQuery('#xlx_json').val(json_object);
-        })
-      };
 
-      reader.onerror = function(ex) {
-        console.log(ex);
-      };
-
-      reader.readAsBinaryString(file);
-    };
-  };
-
-  function handleFileSelect(evt) {
-
-    var files = evt.target.files; // FileList object
-    var xl2json = new ExcelToJSON();
-    xl2json.parseExcel(files[0]);
-  }
-</script>
-
-<form enctype="multipart/form-data">
-  <input id="upload" type=file name="files[]">
-</form>
-
-<textarea class="form-control" rows=35 cols=120 id="xlx_json"></textarea>
-
-<script>
-  document.getElementById('upload').addEventListener('change', handleFileSelect, false);
-</script>
+        // Function: Handle PDF generation
+        generateButton.addEventListener('click', () => {
+            alert('Generating PDF files...');
+            // Add logic to process the Excel file and generate PDFs
+        });
+    </script>
+</body>
+</html>
