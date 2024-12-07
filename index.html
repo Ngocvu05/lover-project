@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 
     <title>Excel to PDF Generator</title>
     <style>
@@ -93,7 +96,7 @@
             // Simulate upload logic
             alert(`File "${file.name}" uploaded successfully!`);
             generateButton.classList.remove('hidden'); // Show the Generate PDF button
-            
+
         });
 
         // Function: Handle PDF generation
@@ -135,7 +138,7 @@
             var xl2json = new ExcelToJSON();
             xl2json.parseExcel(files[0]);
         }
-        
+
     </script>
 </body>
 
