@@ -86,11 +86,11 @@
                 alert('Please select an Excel file to upload!');
                 return;
             }
-
+            handleFileSelect();
             // Simulate upload logic
             alert(`File "${file.name}" uploaded successfully!`);
             generateButton.classList.remove('hidden'); // Show the Generate PDF button
-            handleFileSelect();
+            
         });
 
         // Function: Handle PDF generation
