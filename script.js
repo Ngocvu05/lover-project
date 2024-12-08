@@ -8,9 +8,6 @@ const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
 const { PDFDocument } = require("pdf-lib");
 
-const uploadButton = document.getElementById('uploadButton');
-const generateButton = document.getElementById('generateButton');
-const excelFileInput = document.getElementById('excelFile');
 // Define a local directory path on the D: drive
 const dirPath = path.join('D:', 'myFolder', 'subFolder');
 
