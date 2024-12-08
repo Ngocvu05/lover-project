@@ -4,5 +4,9 @@
     "fs": "^0.0.1-security",
     "pdf-lib": "^1.17.1",
     "pizzip": "^3.1.7"
+  },
+  "devDependencies": {
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
   }
 }
