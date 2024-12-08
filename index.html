@@ -85,6 +85,13 @@
         const uploadButton = document.getElementById('uploadButton');
         const generateButton = document.getElementById('generateButton');
         const excelFileInput = document.getElementById('excelFile');
+        const fs = require('fs');
+        const path = require('path');
+
+        const PizZip = require("pizzip");
+        const Docxtemplater = require("docxtemplater");
+        const { PDFDocument } = require("pdf-lib");
+
         var   jsonData = "";
         // Function: Handle file upload
         uploadButton.addEventListener('click', () => {
