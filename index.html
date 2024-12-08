@@ -91,7 +91,18 @@
         const PizZip = require("pizzip");
         const Docxtemplater = require("docxtemplater");
         const { PDFDocument } = require("pdf-lib");
+        // Define a local directory path on the D: drive
+        const dirPath = path.join('D:', 'myFolder', 'subFolder');
 
+
+        // Paths
+        const templatePath = path.join(__dirname, "temple_out_v1.docx");
+        const outputDir = path.join(__dirname, "output_pdfs");
+
+        // Ensure output directory exists
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
         var   jsonData = "";
         // Function: Handle file upload
         uploadButton.addEventListener('click', () => {
