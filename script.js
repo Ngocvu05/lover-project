@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
-const PizZip = require("pizzip");
-const Docxtemplater = require("docxtemplater");
-const { PDFDocument } = require("pdf-lib");
+// const PizZip = require("pizzip");
+// const Docxtemplater = require("docxtemplater");
+// const { PDFDocument } = require("pdf-lib");
 
 // Define a local directory path on the D: drive
 const dirPath = path.join('D:', 'myFolder', 'subFolder');
