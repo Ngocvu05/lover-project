@@ -6,17 +6,17 @@
 // const { PDFDocument } = require("pdf-lib");
 
 // Define a local directory path on the D: drive
-const dirPath = path.join('D:', 'myFolder', 'subFolder');
+// const dirPath = path.join('D:', 'myFolder', 'subFolder');
 
 
-// Paths
-const templatePath = path.join(__dirname, "temple_out_v1.docx");
-const outputDir = path.join(__dirname, "output_pdfs");
+// // Paths
+// const templatePath = path.join(__dirname, "temple_out_v1.docx");
+// const outputDir = path.join(__dirname, "output_pdfs");
 
-// Ensure output directory exists
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir);
-}
+// // Ensure output directory exists
+// if (!fs.existsSync(outputDir)) {
+//   fs.mkdirSync(outputDir);
+// }
 
 // Function to populate template and generate PDFs
 async function generatePDFs(jsonData) {
