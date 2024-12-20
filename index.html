@@ -114,9 +114,9 @@ generateButton.addEventListener('click', () => {
     const jsonData =  handleFileSelect();
 
     // Send the parsed JSON to the backend
-    //uploadFilesToBackend(jsonData);
+    uploadFilesToBackend(jsonData);
 
-    const fileInput = document.getElementById("excelFile");
+    /* const fileInput = document.getElementById("excelFile");
             if (!fileInput.files[0]) {
                 alert("Please upload an Excel file!");
                 return;
@@ -148,7 +148,7 @@ generateButton.addEventListener('click', () => {
                     .catch((error) => console.error("Error:", error));
             };
 
-            reader.readAsArrayBuffer(fileInput.files[0]);
+            reader.readAsArrayBuffer(fileInput.files[0]); */
 });
 
 async function uploadFilesToBackend(jsonData) {
