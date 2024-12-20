@@ -100,7 +100,7 @@ uploadButton.addEventListener('click', () => {
         alert('Please select an Excel file to upload!');
         return;
     }
-    $('#xlx_json').val(handleFileSelect());
+    handleFileSelect();
     // Simulate upload logic
     alert(`File "${file.name}" uploaded successfully!`);
     generateButton.classList.remove('hidden'); // Show the Generate PDF button
@@ -206,6 +206,7 @@ this.parseExcel = function (file) {
             // Here is your object
             var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
             var json_object = JSON.stringify(XL_row_object);
+            $('#xlx_json').val(json_object);
         })
     };
 
