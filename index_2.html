@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <title> <3 Phương Nhi <3 đáng iu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #6b4226;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upload File</h1>
+        <form id="uploadForm"></form>
+        <!-- Upload Excel File -->
+            <label for="excelFile">Choose File:</label>
+            <input type="file" id="excelFile" accept=".xlsx, .xls" />
+
+            <!-- Upload Button -->
+            <button id="uploadButton">Upload</button>
+
+            <!-- Generate PDF Button -->
+            <button type="submit" id="generateButton" class="hidden">Generate</button>
+            <textarea class="form-control" id="xlx_json"></textarea>
+            <div id="result"></div>
+        </form>
+    </div>
+
+    
+</body>
+<script>
+const uploadButton = document.getElementById('uploadButton');
+const generateButton = document.getElementById('generateButton');
+const excelFileInput = document.getElementById('excelFile');
+
+// Function: Handle file upload
+uploadButton.addEventListener('click', () => {
+    const file = excelFileInput.files[0];
+    if (!file) {
+        alert('Please select an Excel file to upload!');
+        return;
+    }
+    handleFileSelect();
+    // Simulate upload logic
+    alert(`File "${file.name}" uploaded successfully!`);
+    generateButton.classList.remove('hidden'); // Show the Generate PDF button
+
+});
+
+// Function: Handle PDF generation
+generateButton.addEventListener('click', () => {
+    alert('Generating PDF files...');
+    // Add logic to process the Excel file and generate PDFs
+    const jsonData =  handleFileSelect();
+
+    // Send the parsed JSON to the backend
+    //uploadFilesToBackend(jsonData);
+
+    const fileInput = document.getElementById("excelFile");
+            if (!fileInput.files[0]) {
+                alert("Please upload an Excel file!");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetName = workbook.SheetNames[0];
+                const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+                // Send JSON data to backend
+                fetch("http://localhost:8080/api/generate-pdfs/home", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(sheetData),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error("Failed to generate PDFs");
+                        }
+                    })
+                    .then((message) => alert(message))
+                    .catch((error) => console.error("Error:", error));
+            };
+
+            reader.readAsArrayBuffer(fileInput.files[0]);
+});
+
+async function uploadFilesToBackend(jsonData) {
+    const file = excelFileInput.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {
+            type: 'binary'
+        });
+        workbook.SheetNames.forEach(function (sheetName) {
+            // Here is your object
+            var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            const json_object = JSON.stringify(XL_row_object);
+            $('#xlx_json').val(json_object);
+        })
+    };
+
+    reader.onerror = function (ex) {
+        console.log(ex);
+    };
+
+    reader.readAsBinaryString(file);
+    try {
+        const response = await fetch("http://localhost:8080/api/generate-pdfs/home", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(json_object),
+            
+        })
+        
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("Failed to generate PDFs");
+                }
+            })
+            .then((message) => alert(message))
+            .catch((error) => console.error("Error:", error));
+
+        if (!response.ok) {
+            throw new Error("Failed to generate PDFs");
+        }
+
+        // Handle response
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "generated_pdfs.zip";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("result").innerText = "Download started!";
+    } catch (error) {
+        document.getElementById("result").innerText = `Error: ${error.message}`;
+    }
+}
+
+var ExcelToJSON = function () {
+
+    this.parseExcel = function (file) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var data = e.target.result;
+            var workbook = XLSX.read(data, {
+                type: 'binary'
+            });
+            workbook.SheetNames.forEach(function (sheetName) {
+                // Here is your object
+                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                var json_object = JSON.stringify(XL_row_object);
+                $('#xlx_json').val(json_object);
+                return json_object;
+            })
+        };
+
+        reader.onerror = function (ex) {
+            console.log(ex);
+        };
+
+        reader.readAsBinaryString(file);
+    };
+};
+
+function handleFileSelect(evt) {
+
+//var files = evt.target.files; // FileList object
+var files = $('#excelFile')[0].files;
+var xl2json = new ExcelToJSON();
+ return xl2json.parseExcel(files[0]);
+}
+</script>
+</html>
