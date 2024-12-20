@@ -114,7 +114,41 @@ generateButton.addEventListener('click', () => {
     const jsonData =  handleFileSelect();
 
     // Send the parsed JSON to the backend
-    uploadFilesToBackend(jsonData);
+    //uploadFilesToBackend(jsonData);
+
+    const fileInput = document.getElementById("excelFile");
+            if (!fileInput.files[0]) {
+                alert("Please upload an Excel file!");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetName = workbook.SheetNames[0];
+                const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+                // Send JSON data to backend
+                fetch("http://localhost:8080/api/generate-pdfs", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(sheetData),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error("Failed to generate PDFs");
+                        }
+                    })
+                    .then((message) => alert(message))
+                    .catch((error) => console.error("Error:", error));
+            };
+
+            reader.readAsArrayBuffer(fileInput.files[0]);
 });
 
 async function uploadFilesToBackend(jsonData) {
