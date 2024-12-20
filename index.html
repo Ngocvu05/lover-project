@@ -100,7 +100,7 @@ uploadButton.addEventListener('click', () => {
         alert('Please select an Excel file to upload!');
         return;
     }
-    handleFileSelect();
+    $('#xlx_json').val(handleFileSelect());
     // Simulate upload logic
     alert(`File "${file.name}" uploaded successfully!`);
     generateButton.classList.remove('hidden'); // Show the Generate PDF button
@@ -152,6 +152,8 @@ generateButton.addEventListener('click', () => {
 });
 
 async function uploadFilesToBackend(jsonData) {
+
+    console.log(JSON.stringify(jsonData))
     try {
         const response = await fetch("http://localhost:8080/api/generate-pdfs", {
             method: "POST",
@@ -159,7 +161,9 @@ async function uploadFilesToBackend(jsonData) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(jsonData),
+            
         })
+        
             .then((response) => {
                 if (response.ok) {
                     return response.text();
@@ -202,8 +206,6 @@ this.parseExcel = function (file) {
             // Here is your object
             var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
             var json_object = JSON.stringify(XL_row_object);
-            console.log(JSON.parse(json_object));
-            $('#xlx_json').val(json_object);
         })
     };
 
