@@ -3,55 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Excel and Generate PDFs</title>
-</head>
-<body>
-    <h1>Upload Excel to Generate PDFs</h1>
-    <input type="file" id="excelFile" />
-    <button id="uploadBtn">Upload and Generate PDFs</button>
-
-    <script src="https://cdn.sheetjs.com/xlsx-0.18.5/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Upload Excel</title>
+</head>
+<body>
+    <h1>Upload Excel File</h1>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" name="file" accept=".xlsx, .xls" required>
+        <button type="submit">Upload and Generate PDFs</button>
+    </form>
 
     <script>
-        document.getElementById("uploadBtn").addEventListener("click", function () {
-            const fileInput = document.getElementById("excelFile");
-            if (!fileInput.files[0]) {
-                alert("Please upload an Excel file!");
+        document.getElementById("uploadForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const fileInput = document.getElementById("fileInput");
+            if (!fileInput.files.length) {
+                alert("Please select an Excel file to upload.");
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
-                const sheetName = workbook.SheetNames[0];
-                const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
 
-                // Send JSON data to backend
-                fetch("http://localhost:8080/api/generate-pdfs/home", {
+            try {
+                const response = await fetch("http://localhost:8080/api/upload-excel", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(sheetData),
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            return response.text();
-                        } else {
-                            throw new Error("Failed to generate PDFs");
-                        }
-                    })
-                    .then((message) => alert(message))
-                    .catch((error) => console.error("Error:", error));
-            };
+                    body: formData,
+                });
 
-            reader.readAsArrayBuffer(fileInput.files[0]);
+                if (response.ok) {
+                    alert("PDF files generated successfully!");
+                } else {
+                    alert("Failed to generate PDFs.");
+                }
+            } catch (error) {
+                console.error("Error uploading file:", error);
+            }
         });
     </script>
 </body>
