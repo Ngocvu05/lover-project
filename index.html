@@ -14,7 +14,7 @@
     <h1>Upload Excel File</h1>
     <form id="uploadForm">
         <input type="file" id="fileInput" name="file" accept=".xlsx, .xls" required>
-        <button type="submit">Upload and Generate DOCXs</button>
+        <button type="submit">Upload and Generate PDFs</button>
         
     </form>
 
@@ -29,9 +29,10 @@
 
             const formData = new FormData();
             formData.append("file", fileInput.files[0]);
-
+            const URL_API = "http://localhost:8080/api/upload-excel-docx";
+            //const URL_API = "https://generatefile-63647a1bdb73.herokuapp.com/api/upload-excel-docx";
             try {
-                const response = await fetch("http://localhost:8080/api/upload-excel-docx", {
+                const response = await fetch(URL_API, {
                     method: "POST",
                     body: formData,
                 });
